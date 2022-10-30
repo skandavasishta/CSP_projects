@@ -1,0 +1,168 @@
+//UI Elements
+onEvent("EasyButton", "click", function( ) {
+  setScreen("EasyScreen");
+});
+onEvent("MediumButton", "click", function( ) {
+  setScreen("MediumScreen");
+});
+
+onEvent("Enter", "click", function( ) {
+  setText("WelcomeMessage", "Hello "+ getText("Name") +". Welcome to Rock Paper Scissors Pro! Please select a game mode. In easy mode, you will get acquainted with the game and will always win. However, medium mode provides the true experience of rock-paper-scissors against a computer that will randomly select one of the three options." );
+  
+});
+onEvent("BackButtonEasyScreen", "click", function( ) {
+  setScreen("HomeScreen");
+});
+
+
+//Easy Screen
+
+//functions that do what will happen once each button is clicked
+function ClickOnRockButtonEasyMode() {
+  onEvent("ChooseRockButtonEasyMode", "click", function( ) {
+    setText("PlayerChoiceTextAreaEasyMode", "You chose rock");
+    setText("ComputerChoiceEasyMode", "The computer chose scissors");
+    setText("EndResultTextAreaEasyMode", "You Won!");
+  });
+  
+}
+function ClickOnPaperButtonEasyMode() {
+  onEvent("ChoosePaperButtonEasyMode", "click", function( ) {
+    setText("PlayerChoiceTextAreaEasyMode", "You chose paper");
+    setText("ComputerChoiceEasyMode", "The computer chose rock");
+    setText("EndResultTextAreaEasyMode", "You Won!");
+  });
+}
+function ClickOnScissorsButtonEasyMode() {
+  onEvent("ChooseScissorsButtonEasyMode", "click", function( ) {
+    setText("PlayerChoiceTextAreaEasyMode", "You chose scissors");
+    setText("ComputerChoiceEasyMode", "The computer chose paper");
+    setText("EndResultTextAreaEasyMode", "You Won!");
+  });
+}
+
+//calling each function
+ClickOnRockButtonEasyMode();
+ClickOnPaperButtonEasyMode();
+ClickOnScissorsButtonEasyMode();
+
+
+
+//MediumScreen
+var PlayerOption = ["Rock", "Paper", "Scissors"];
+var ComputerOption;
+var score = 0;
+var GamesPlayed = 0;
+var UserGamesWon = 0;
+var ComputerGamesWon = 0;
+hideElement("ResultMessage");
+hideElement("RestartButton");
+setText("ResultMessage", "Game Over. You have played 10 games."+"Your score is"+ UserGamesWon+ "and the computer's score is"+ComputerGamesWon );
+onEvent("RestartButton", "click", function( ) {
+  GamesPlayed = 0 ;
+  UserGamesWon = 0;
+  ComputerGamesWon = 0;
+  score = 0;
+  setText("ResultMediumMode", "");
+  setText("ScoreTextArea", "0");
+  hideElement("RestartButton");
+  hideElement("ResultMessage");
+  
+});
+
+//function for running score
+function ScoreMedium() {
+  if (getText("ResultMediumMode") == "You won") {
+    score = score+1;
+    UserGamesWon = UserGamesWon+1;
+  } else {
+    if (getText("ResultMediumMode") == "It's a tie") {
+      score = score;
+    } else {
+      if (getText("ResultMediumMode") == "You lost") {
+        score = score-1;
+        ComputerGamesWon = ComputerGamesWon+1;
+      }
+    }
+  }
+}
+
+//functions for showing end result each game
+function Result() {
+  ComputerOption = randomNumber(0, 2);
+  setText("ComputerChoice", PlayerOption[ComputerOption]);
+  if (getText("UserChoice") == "Rock" && getText("ComputerChoice") == "Rock") {
+    setText("ResultMediumMode", "It's a tie");
+  } else {
+    if (getText("UserChoice") == "Rock" && getText("ComputerChoice") == "Scissors") {
+      setText("ResultMediumMode", "You won");
+      setText("ScoreTextArea", score+1 );
+    } else {
+      if (getText("UserChoice") == "Rock" && getText("ComputerChoice") == "Paper") {
+        setText("ResultMediumMode", "You lost");
+        setText("ScoreTextArea", score-1);
+      }
+    }
+  }
+  if (getText("UserChoice") == "Paper" && getText("ComputerChoice") == "Paper") {
+    setText("ResultMediumMode", "It's a tie");
+  } else {
+    if (getText("UserChoice") == "Paper" && getText("ComputerChoice") == "Rock") {
+      setText("ResultMediumMode", "You won");
+      setText("ScoreTextArea", score+1 );
+    } else {
+      if (getText("UserChoice") == "Paper" && getText("ComputerChoice") == "Scissors") {
+        setText("ResultMediumMode", "You lost");
+        setText("ScoreTextArea", score-1);
+      }
+    }
+  }
+  if (getText("UserChoice") == "Scissors" && getText("ComputerChoice") == "Scissors") {
+    setText("ResultMediumMode", "It's a tie");
+  } else {
+    if (getText("UserChoice") == "Scissors" && getText("ComputerChoice") == "Paper") {
+      setText("ResultMediumMode", "You won");
+      setText("ScoreTextArea", score+1 );
+    } else {
+      if (getText("UserChoice") == "Scissors" && getText("ComputerChoice") == "Rock") {
+        setText("ResultMediumMode", "You lost");
+        setText("ScoreTextArea", score-1);
+      }
+    }
+  }
+  GamesPlayed = GamesPlayed + 1 ;
+  if (GamesPlayed == 10) {
+      showElement("ResultMessage");
+      showElement("RestartButton");
+      setText("ResultMessage", "Game Over. You have played 10 games."+"Your score is"+ UserGamesWon+ "and the computer's score is"+ComputerGamesWon+". Would you like to restart?" );
+  }
+}
+
+
+//on events for what will happen when user clicks on each button
+function RockPaperScissorsOnEvents() {
+  onEvent("RockButtonMedium", "click", function( ) {
+    setText("UserChoice", PlayerOption[0]);
+    Result();
+    ScoreMedium();
+    
+  });
+  onEvent("PaperButtonMedium", "click", function( ) {
+    setText("UserChoice", PlayerOption[1]);
+    Result();
+    ScoreMedium();
+
+  });
+  onEvent("ScissorsButtonMedium", "click", function( ) {
+    setText("UserChoice", PlayerOption[2]);
+    Result();
+    ScoreMedium();
+
+  });
+}
+RockPaperScissorsOnEvents();
+
+//back button
+onEvent("BackButtonMediumMode", "click", function( ) {
+  setScreen("HomeScreen");
+});
